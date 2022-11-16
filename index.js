@@ -99,16 +99,17 @@ async function run() {
             res.send(result);
         })
 
-        app.patch('/reviews/:id', verifyJWT, async (req, res) => {
+        app.put('/reviews/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
-            const status = req.body.status;
+            const reviews = req.body;
             const query = { _id: ObjectId(id) };
-            const updatedDoc = {
+            const option = { upsert: true };
+            const updatedReview = {
                 $set: {
-                    status: status,
+                    message: reviews.message
                 }
             }
-            const result = await reviewsCollection.updateOne(query, updatedDoc);
+            const result = await reviewsCollection.updateOne(query, updatedDoc, option);
             res.send(result);
         })
 
